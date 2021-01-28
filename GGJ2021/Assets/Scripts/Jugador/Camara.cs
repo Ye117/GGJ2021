@@ -7,7 +7,8 @@ public class Camara : MonoBehaviour
 
     public float rotacion;
 
-    public bool girar;
+    public bool giroInvertido;
+    public bool giroNormal;
 
     //instancia
     public static Camara instance;
@@ -18,30 +19,40 @@ public class Camara : MonoBehaviour
 
         camara = GetComponent<Camera>();
         rotacion = 0;
-        girar = false;
+        giroInvertido = false;
+        giroNormal = false;
     }
     private void Update()
-    {
-        
-        if (girar)
+    {   
+        //En esta sentencia obliga a que no pueda superar los 180º
+        //Vuelve al giro normal
+        if (giroNormal)
         {
-            rotacion+=5;
-            transform.eulerAngles = new Vector3(0, 0, rotacion);
-            //print("Está girando");
+            rotacion -= 5 ;
+            //print("Esta girando a la posicion normal");
         }
 
+        //Cuando colisione con una plataforma girará mientras que no sea 180 o -180
+        if (giroInvertido)
+        {
+            rotacion+= 5 ;
+            //print("Está girando a la inversa");
+        }
+
+        rotacion = Mathf.Clamp(rotacion, 0, 180);
+        transform.eulerAngles = new Vector3(0, 0, rotacion);
+     
+        //Una vez que llegue a los 180º mantendrá la rotación hasta que vuelva a tocar una plataforma que le haga girar
         MantenerRotacion();
-        Mathf.Clamp(rotacion, 0, 180);
-
-        print("Giro:" + rotacion);
-
+        //print("Giro:" + rotacion);
     }
     void MantenerRotacion()
     {
         if (rotacion == 180)
-        {
-            girar = false;
-        }
+            giroInvertido = false;
+
+        if (rotacion == 0)
+            giroNormal = false;
     }
 
 }
