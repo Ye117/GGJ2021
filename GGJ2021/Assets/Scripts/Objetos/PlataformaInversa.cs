@@ -10,6 +10,7 @@ public class PlataformaInversa : MonoBehaviour
         if (collision.gameObject.name == "Jugador")
         {
             FindObjectOfType<Camara>().camara.transform.eulerAngles= new Vector3(0,0,180);
+            //FindObjectOfType<Camara>().camara.
             print("La camara ha girado 180 grados");
         }
      }
