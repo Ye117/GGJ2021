@@ -13,6 +13,8 @@ public class PruebaGitHub : MonoBehaviour
         print(1 + 2);
         //Adrian estuvo aqui
         print("Sirve");
+
+        var cadenaDeTexto = "Patata Cocida";
     }
     private void Update()
     {
