@@ -4,14 +4,17 @@ using UnityEngine;
 public class PlataformaInversa : MonoBehaviour
 {
 
-    
+    private void Awake()
+    {
+        
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
      {
         if (collision.gameObject.name == "Jugador")
         {
-            FindObjectOfType<Camara>().camara.transform.eulerAngles= new Vector3(0,0,180);
-            //FindObjectOfType<Camara>().camara.
-            print("La camara ha girado 180 grados");
+            Camara.instance.girar = true;
+            //print("La camara ha girado 180 grados");
         }
      }
 }

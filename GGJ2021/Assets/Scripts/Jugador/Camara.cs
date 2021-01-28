@@ -5,21 +5,43 @@ public class Camara : MonoBehaviour
     //Componente
     public Camera camara;
 
-    float giro;
+    public float rotacion;
 
-    bool girar;
+    public bool girar;
+
+    //instancia
+    public static Camara instance;
     private void Awake()
     {
+        if (instance == null)
+            instance = this;
+
         camara = GetComponent<Camera>();
-        giro = 0;
+        rotacion = 0;
         girar = false;
     }
     private void Update()
     {
+        
         if (girar)
-            giro++;
-        Mathf.Clamp(giro, 0, 180);
-        print("Giro:" + giro);
+        {
+            rotacion+=5;
+            transform.eulerAngles = new Vector3(0, 0, rotacion);
+            //print("Está girando");
+        }
+
+        MantenerRotacion();
+        Mathf.Clamp(rotacion, 0, 180);
+
+        print("Giro:" + rotacion);
+
+    }
+    void MantenerRotacion()
+    {
+        if (rotacion == 180)
+        {
+            girar = false;
+        }
     }
 
 }
