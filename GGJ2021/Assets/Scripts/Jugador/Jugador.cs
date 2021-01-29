@@ -11,14 +11,22 @@ public class Jugador : MonoBehaviour
     bool vivo;
     public float velocidad;
     public float velocidadCorrer;
+    public float velocidadAgachado;
     float salto;
     //bool
     bool corriendo;
     bool agachado;
     bool puedesSaltar;
+    //PlayerPrefs
+    float respawnX,respawnY;
+    Vector2 zonaRespawn;
     
     private void Awake()
     {
+        //PlayerPrefs
+        respawnX = PlayerPrefs.GetFloat("ZonaRespawnX");
+        respawnY = PlayerPrefs.GetFloat("ZonaRespawnY");
+        
         //Componentes
         _RB = GetComponent<Rigidbody2D>();
         jugador = GetComponent<Transform>();
@@ -29,28 +37,36 @@ public class Jugador : MonoBehaviour
         vivo = true;
         corriendo = false;
         agachado = false;
+
+        //Zona respawn
+        zonaRespawn = new Vector2(respawnX, respawnY);
+        //Cuando aparezca se teletransportará a la zona si no es nula
+        transform.position = zonaRespawn;  //Cuando se reinicie la escena el jugador volverá a la posicion de guardado
     }
     private void FixedUpdate()
     {
-        if(vivo)
+        if (vivo)
+        {
             //Movimiento lateral del jugador
-            switch (corriendo)
-            {
-                case false:  
-                    _RB.velocity= new Vector2(Input.GetAxisRaw("Horizontal") * velocidad * Time.fixedDeltaTime, _RB.velocity.y);
-                    break;
-                case true:
-                    _RB.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * velocidadCorrer * Time.fixedDeltaTime, _RB.velocity.y);
-                    break;
-            }
+            if (!corriendo  && !agachado)  //Velocidad normal si no está corriendo ni está agachado
+                _RB.velocity= new Vector2(Input.GetAxisRaw("Horizontal") * velocidad * Time.fixedDeltaTime, _RB.velocity.y);
+            else if(corriendo)  //Velocidad corriendo
+                _RB.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * velocidadCorrer * Time.fixedDeltaTime, _RB.velocity.y);
+            else if(agachado) //Velocidad agachado
+                 _RB.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * velocidadAgachado * Time.fixedDeltaTime, _RB.velocity.y);   
+        }
     }
     private void Update()
     {
-
         #region Eliminar
         if (Input.GetKeyDown("r"))
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            //print(puedesSaltar);
+        if (Input.GetKeyDown("k"))
+            vivo = false;
+        //print(puedesSaltar);
+        //print("Agachado:" + agachado);
+        //print("Corriendo:" + corriendo);
+
         #endregion
 
         //Mientras que está vivo podrá hacer todo esto
@@ -62,10 +78,13 @@ public class Jugador : MonoBehaviour
 
             //Correr  Si pulsa Shift estará corriendo,y si no corriendo es false
             corriendo = Input.GetKey(KeyCode.LeftShift) ? true : false;
-            //print("Corriendo:" + corriendo);
+            //Agachado cuando pulsa Left Control
             agachado = Input.GetKey(KeyCode.LeftControl) ? true : false;
 
         }
+        else  // Muerto
+        // Cuando muere automaticamente se reinicia la escena  
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);  // CAMBIAR CON UNA CORRUTINA
 
     }
   
@@ -77,7 +96,22 @@ public class Jugador : MonoBehaviour
             puedesSaltar = true;
         if (collision.name == "ZonaMortal")
             vivo = false;
-        
+        //Zona de respawn
+        if (collision.name == "Zona Respawn")
+        {
+            //Obtiene la posición en la que se encuentra la zona de respawn
+            respawnX=collision.gameObject.transform.position.x;
+            respawnY=collision.gameObject.transform.position.y;
+
+            //print("La posicion del respawn es :" + collision.gameObject.transform.position);
+            //print("X:" + respawnX);
+            //print("Y:" + respawnY);
+
+            //Guarda la posicion de la zona de respawn
+            PlayerPrefs.SetFloat("ZonaRespawnX", respawnX);
+            PlayerPrefs.SetFloat("ZonaRespawnY", respawnY);
+        }
+
     }
     private void OnTriggerExit2D(Collider2D collision)
     {

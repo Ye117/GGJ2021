@@ -13,15 +13,15 @@ public class ZonaDesprendimientos : MonoBehaviour
     }
     void Objetos()
     {
-        int numObj = Random.Range(1,6);
+        int numObj = Random.Range(1,4);
         float limiteIzquierdo = transform.position.x - 8;
         float limiteDerecho = transform.position.x + 8;
         for (int i = 1; i < numObj; i++)
         {
             //print(i + "objetos");
-            //Creará un numero de objetos
+            //Creará un numero de objetos  
             Instantiate(objetos, new Vector2(Random.Range(limiteIzquierdo, limiteDerecho),  //posicion en X
-            transform.position.y+Random.Range(2,5)), Quaternion.identity); //Posicion en Y para evitar que estén en la misma fila
+            transform.position.y+Random.Range(4,10)), Quaternion.identity); //Posicion en Y para evitar que estén en la misma fila
         }
     }
 
