@@ -26,7 +26,6 @@ public class Jugador : MonoBehaviour
         //PlayerPrefs
         respawnX = PlayerPrefs.GetFloat("ZonaRespawnX");
         respawnY = PlayerPrefs.GetFloat("ZonaRespawnY");
-        
         //Componentes
         _RB = GetComponent<Rigidbody2D>();
         jugador = GetComponent<Transform>();
@@ -41,7 +40,7 @@ public class Jugador : MonoBehaviour
         //Zona respawn
         zonaRespawn = new Vector2(respawnX, respawnY);
         //Cuando aparezca se teletransportará a la zona si no es nula
-        transform.position = zonaRespawn;  //Cuando se reinicie la escena el jugador volverá a la posicion de guardado
+        transform.position = zonaRespawn;  //Cuando se inicie la escena el jugador volverá a la posicion de guardado
     }
     private void FixedUpdate()
     {
