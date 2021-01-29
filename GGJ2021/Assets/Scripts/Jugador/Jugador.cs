@@ -6,7 +6,7 @@ public class Jugador : MonoBehaviour
 {
     //Componentes
     Rigidbody2D _RB;
-    public Transform jugador;
+    [HideInInspector] public Transform jugador;
     //Características del jugador
     bool vivo;
     public float velocidad;
@@ -14,7 +14,7 @@ public class Jugador : MonoBehaviour
     public float velocidadAgachado;
     float salto;
     //bool
-    bool corriendo;
+    bool corriendo;  // En vez de un caminando ahora mismo simplemente he puesto !corriendo y !agachado para que sea caminar
     bool agachado;
     bool puedesSaltar;
     //PlayerPrefs
@@ -58,9 +58,9 @@ public class Jugador : MonoBehaviour
     private void Update()
     {
         #region Eliminar
-        if (Input.GetKeyDown("r"))
+        if (Input.GetKeyDown("r"))  //Reiniciar
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        if (Input.GetKeyDown("k"))
+        if (Input.GetKeyDown("k"))  //Morir
             vivo = false;
         //print(puedesSaltar);
         //print("Agachado:" + agachado);
@@ -71,30 +71,68 @@ public class Jugador : MonoBehaviour
         //Mientras que está vivo podrá hacer todo esto
         if (vivo)
         {
+            //Si está activado el Fungus no se podrá mover
+            FungusDialogos();
             //Salto
             if (Input.GetKeyDown(KeyCode.Space) && puedesSaltar)
                 _RB.velocity = new Vector2(_RB.velocity.x, salto);
 
             //Correr  Si pulsa Shift estará corriendo,y si no corriendo es false
             corriendo = Input.GetKey(KeyCode.LeftShift) ? true : false;
+
             //Agachado cuando pulsa Left Control
             agachado = Input.GetKey(KeyCode.LeftControl) ? true : false;
 
+            //Por si acaso añado esto para que correr tenga prioridad sobre agacharse 
+            if (corriendo)
+                agachado = false;
+            
         }
         else  // Muerto
-        // Cuando muere automaticamente se reinicia la escena  
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);  // CAMBIAR CON UNA CORRUTINA
+              // Cuando muere automaticamente se reinicia la escena  
+            StartCoroutine(FindObjectOfType<DDOL>().ReiniciarEscena());
 
     }
-  
 
-    //Metodo de trigger
+    #region Metodos
+    void FungusDialogos()
+    {
+        var dialogo = Fungus.SayDialog.GetSayDialog();
+        var menu = Fungus.MenuDialog.GetMenuDialog();
+
+        if(dialogo.isActiveAndEnabled || menu.isActiveAndEnabled)
+        {
+            _RB.bodyType = RigidbodyType2D.Static ;  //Cuando este activado el cuerpo será estático,no podrá moverse
+            /*
+            velocidad = 0;
+            velocidadAgachado = 0;
+            velocidadCorrer = 0;
+            */
+        }
+        else
+        {
+            _RB.bodyType = RigidbodyType2D.Dynamic;  //Cuando se desactive el Fungus siempre será dinámico
+            /*
+            velocidad = 500;
+            velocidadAgachado = 200;
+            velocidadCorrer = 750;
+            */
+        }
+    }
+    #endregion
+
+    //Metodos de colisiones
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        //Pisando cualquier superficie podrá saltar
         if (collision.tag == "Pisable")
             puedesSaltar = true;
+
+        //La zona mortal son huecos al vacío
         if (collision.name == "ZonaMortal")
             vivo = false;
+
+
         //Zona de respawn
         if (collision.name == "Zona Respawn")
         {
@@ -118,7 +156,7 @@ public class Jugador : MonoBehaviour
             puedesSaltar = false;
     }
     //Metodo de colision
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)  //Revisar, como en Fungus tambien tiene trigger  se usa Unityengine
     {
         //Cuando colisione con el suelo podrá saltar
         if (collision.gameObject.tag == "Pisable")
