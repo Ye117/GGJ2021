@@ -9,25 +9,19 @@ public class ZonaDesprendimientos : MonoBehaviour
     private void Start()
     {
         //Para que no parezca tan planeado, lo ideal es usar Random.Range
-        //InvokeRepeating("Objetos", 0, 1f);
+        InvokeRepeating("Objetos", 0, Random.Range(0.2f,0.5f));
     }
-    private void Update()
-    {
-        //ELIMINAR
-        if (Input.GetKeyDown("o"))
-            Objetos();
-    }
-
     void Objetos()
     {
         int numObj = Random.Range(1,6);
-        float limiteIzquierdo = transform.position.x-5;
-        float limiteDerecho = transform.position.y + 5;
-        float posicion;
+        float limiteIzquierdo = transform.position.x - 8;
+        float limiteDerecho = transform.position.x + 8;
         for (int i = 1; i < numObj; i++)
         {
-            print(i + "objetos");
-            Instantiate(objetos, new Vector2(Random.Range(limiteIzquierdo, limiteDerecho),transform.position.y) , Quaternion.identity);
+            //print(i + "objetos");
+            //Creará un numero de objetos
+            Instantiate(objetos, new Vector2(Random.Range(limiteIzquierdo, limiteDerecho),  //posicion en X
+            transform.position.y+Random.Range(2,5)), Quaternion.identity); //Posicion en Y para evitar que estén en la misma fila
         }
     }
 
