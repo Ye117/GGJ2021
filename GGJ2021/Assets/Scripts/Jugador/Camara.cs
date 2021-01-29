@@ -3,12 +3,11 @@ using UnityEngine;
 public class Camara : MonoBehaviour
 {
     //Componente
-    public Camera camara;
+    [HideInInspector] public Camera camara;
+    [HideInInspector] public float rotacion;
 
-    public float rotacion;
-
-    public bool giroInvertido;
-    public bool giroNormal;
+    [HideInInspector] public bool giroInvertido;
+    [HideInInspector] public bool giroNormal;
 
     //instancia
     public static Camara instance;
@@ -21,6 +20,11 @@ public class Camara : MonoBehaviour
         rotacion = 0;
         giroInvertido = false;
         giroNormal = false;
+    }
+    private void LateUpdate()
+    {
+        //La posicion de la cámara es la posición del jugador excepto en Z que tiene que ser en -10
+        transform.position = new Vector3(FindObjectOfType<Jugador>().jugador.position.x,FindObjectOfType<Jugador>().jugador.position.y,-10);
     }
     private void Update()
     {   
