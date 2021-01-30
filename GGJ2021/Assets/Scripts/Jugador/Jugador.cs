@@ -6,7 +6,7 @@ public class Jugador : MonoBehaviour
 {
     
     //Componentes
-    Rigidbody2D _RB;
+    public Rigidbody2D _RB;
     [HideInInspector] public Transform jugador;
     //Características del jugador
     bool vivo;
@@ -40,8 +40,9 @@ public class Jugador : MonoBehaviour
 
         //Zona respawn
         zonaRespawn = new Vector2(respawnX, respawnY);
-        //Cuando aparezca se teletransportará a la zona si no es nula
-        transform.position = zonaRespawn;  //Cuando se inicie la escena el jugador volverá a la posicion de guardado
+        //Cuando aparezca se teletransportará a la zona si no es nula 
+        //Ponerlo más adelante
+        //transform.position = zonaRespawn;  //Cuando se inicie la escena el jugador volverá a la posicion de guardado
     }
     private void FixedUpdate()
     {
@@ -126,7 +127,7 @@ public class Jugador : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //Pisando cualquier superficie podrá saltar
-        if (collision.tag == "Pisable")
+        if (collision.gameObject.layer == 6)
             puedesSaltar = true;
 
         //La zona mortal son huecos al vacío
@@ -153,7 +154,7 @@ public class Jugador : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Pisable")
+        if (collision.gameObject.layer == 6)
             puedesSaltar = false;
     }
     //Metodo de colision
