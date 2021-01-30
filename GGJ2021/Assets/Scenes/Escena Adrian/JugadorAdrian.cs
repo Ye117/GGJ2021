@@ -6,24 +6,24 @@ public class JugadorAdrian : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    float velocidad;
-
-    public string esbozo;
     public Vector3 cambioEscala;
     public bool mirandoDerecha;
+    public Sprite caraPersonaje;
+ 
+
 
 
     void Start()
     {
-        print(esbozo);
         mirandoDerecha = true;
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        velocidad = 20f;
-
+        Debug.Log(this.GetComponent<SpriteRenderer>().color);
         if (Input.GetKey(KeyCode.D))
         {
             if (!mirandoDerecha)
@@ -43,8 +43,16 @@ public class JugadorAdrian : MonoBehaviour
             }
             transform.position -= cambioEscala * Time.deltaTime;
         }
+
+        if (Input.GetKeyUp(KeyCode.A))
+        {
+            transform.position -= cambioEscala * Time.deltaTime * 5;
+        }
     }
 
+    /// <summary>
+    /// Cambia la orientación del objeto
+    /// </summary>
     void Giro()
     {
         //Cambiar booleano
@@ -57,4 +65,6 @@ public class JugadorAdrian : MonoBehaviour
 
 
     }
+
+
 }
