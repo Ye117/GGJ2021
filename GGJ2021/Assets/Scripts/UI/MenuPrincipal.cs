@@ -1,13 +1,15 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using TMPro;
 public class MenuPrincipal : MonoBehaviour
 {
-    void EmpezarJuego()
+    public void EmpezarJuego()
     {
+        //Activar FadeIn 
         StartCoroutine(CargarEscenaInicial());
     }
-    void Salir()
+    public void Salir()
     {
         Application.Quit();
     }

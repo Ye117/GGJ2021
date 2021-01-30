@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class Jugador : MonoBehaviour
 {
+    
     //Componentes
     Rigidbody2D _RB;
     [HideInInspector] public Transform jugador;
@@ -89,7 +90,7 @@ public class Jugador : MonoBehaviour
             
         }
         else  // Muerto
-              // Cuando muere automaticamente se reinicia la escena  
+              // Cuando muere automaticamente se reinicia la escena  //Añadirle algún tiempo
             StartCoroutine(FindObjectOfType<DDOL>().ReiniciarEscena());
 
     }
